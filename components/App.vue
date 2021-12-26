@@ -26,13 +26,13 @@
       <p>✅ Loaded {{$store.getters.numAds}} ads ({{$store.getters.numWrapped}} are wrapped as NFTs!) as of block {{$store.state.loadedBlockNumber}} ({{timeSinceLoaded}})</p>
 
       <p>
-        Ads displayed above are loaded directly from the Ethereum Blockchain.
+        Ads displayed above are loaded directly from the Solana Blockchain.
         This Decentralized Application (<a
           href="https://ethereum.stackexchange.com/questions/383/what-is-a-dapp"
           >DApp</a
         >) does not have a traditional backend. No MVC framework, no SQL
         database. It's just a JavaScript application served statically from
-        Github which speaks to the Ethereum blockchain using
+        Github which speaks to the Solana blockchain using
         <a href="https://github.com/ethereum/web3.js/">Web3.js</a>. Pretty cool,
         right?
       </p>
@@ -72,7 +72,6 @@
           >
           <a v-else v-on:click="showNSFW = false">Hide NSFW</a>
         </li>
-        <li><a href="https://v1.thousandetherhomepage.com">Switch to v1 (2017)</a></li>
         <li class="buttons">
           <button :disabled="$store.state.vis == 'grid'"  v-on:click="$store.commit('setVis', 'grid')">Grid</button>
           <button :disabled="$store.state.vis == 'list'" v-on:click="$store.commit('setVis', 'list')">List</button>

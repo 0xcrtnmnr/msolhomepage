@@ -17,9 +17,9 @@ h1 {
 <template>
   <header>
     <h1>
-      <NuxtLink to="/">Thousand Ether Homepage</NuxtLink>
+      <NuxtLink to="/">Million Solana Homepage</NuxtLink>
     </h1>
-    <h2>1,000,000 pixels &middot; 0.001 ETH per pixel &middot; Own a piece of blockchain history!</h2>
+    <h2>1,000,000 pixels &middot; 1 SOL per pixel &middot; Own a piece of the history of the fastest Blockchain!</h2>
     <slot></slot>
   </header>
 </template>

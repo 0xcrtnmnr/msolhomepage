@@ -1,7 +1,7 @@
 <template>
   <div class="sold">
     {{$store.state.adsPixels}} pixels sold
-    <a target="_blank" href="https://opensea.io/collection/thousand-ether-homepage" v-if="this.$store.getters.isSoldOut" disabled>Available on OpenSea</a>
+    <a target="_blank" href="https://opensea.io/collection/million-solana-homepage" v-if="this.$store.getters.isSoldOut" disabled>Available on OpenSea</a>
     <button type="button" v-on:click="$store.commit('updatePreview', {x, y})" v-else-if="!$store.state.previewAd">Buy Pixels</button>
   </div>
 </template>

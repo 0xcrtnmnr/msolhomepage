@@ -36,44 +36,37 @@
 
       <h2>What is your goal?</h2>
       <p>
-        The ThousandEtherHomapage is a homage to the famous
-        MillionDollarHomepage. Our goal is to balance the authentic retro feel
-        of the original project with a modern interpretation of Ethereum
-        blockchain technology. What a time to be alive!
+        The MillionSolanaHomepage is a homage to the famous MillionDollarHomepage.
+        Ethereum only got a "Thousand Ether Homepage" (and this project was inspired by that!),
+        but our goal is to hit a million SOL ! ETH couldn't do it... Can SOL ?!?!?
       </p>
 
       <h2>What do I get?</h2>
       <p>
-        You get to buy a piece of blockchain history! At 0.001 ETH per pixel you
+        You get to buy a piece of blockchain history! At 1 SOL per pixel you
         can get a display ad and advertise anything you want, forever
-        immortalized on the Ethereum blockchain.
-      </p>
-
-      <h2>Why a Thousand Ether Homepage and not a Million Ether Homepage?</h2>
-      <p>
-        The bottom line: We want the ad space to sell out. We’re confident we
-        can sell out at 1,000 ETH, but a million ether at current prices is not
-        realistic.
+        immortalized on the Solana blockchain.
       </p>
 
       <h2>Hasn’t this been done before?</h2>
       <p>
-        Ethereum wasn’t the very first cryptocurrency, but it’s doing alright.
-        We might not be first, but we learned from other attempts and we’re here
-        to be the best.
+        Yes, but only on Ethereum. And the way gas fees have been going it's going to take a looooooong time
+        for Ethereum to catch up with Solana.
+
+        We might not be first on any blockchain, but the crypto future will certainly see
+        more than one Layer1 blockchains and why only have this homage on just one of those L1 chains !?
       </p>
 
       <h2>How long will this be up?</h2>
       <p>
-        Your ad will be on the Ethereum blockchain forever! As long as someone
-        somewhere is mining Ethereum, your little piece of blockchain history
+        Your ad will be on the Solana blockchain forever! As long as someone
+        somewhere is mining Solana, your little piece of blockchain history
         will endure too.
       </p>
 
       <h2>When did this launch?</h2>
       <p>
-        We published the smart contract on the 12th year anniversary of the
-        launch of MillionDollarHomepage: August 26, 2017.
+        // TBC
       </p>
 
       <h2>What happens when I buy an ad?</h2>
@@ -88,8 +81,7 @@
         The ad images are served to the user over HTTP, Swarm, or IPFS. You're
         responsibe for uploading them to a server or the Swarm or the IPFS
         network and providing the URL. You can also use a "data://" url, but
-        this will cost you more gas to store. We do provide a periodic static
-        cache of the (non-NSFW) images).
+        this will cost you more gas to store.
       </p>
 
       <h2>What if I want to advertise my socially-questionable business?</h2>
@@ -112,11 +104,7 @@
 
       <h2>Have you considered a shorter URL?</h2>
       <p>
-        We have some handy aliases like
-        <a href="https://1000eth.com">1000eth.com</a>,
-        <a href="https://1000ether.com/">1000ether</a>, and
-        <a href="https://1000etherhomepage.com/">1000etherhomepage</a>. They all
-        lead back to the Thousand Ether Homepage.
+        // TBC
       </p>
 
       <h2>What’s cool about your smart contract?</h2>
@@ -131,8 +119,7 @@
         modifiers. Making something simple is hard, so don’t let it fool you.
       </p>
       <p>
-        The second best part? Simple means the fees are low. The most
-        complicated thing you’ll do will only cost a dollar or two in fees, and
+        The second best part? Simple means the fees are low and so
         you’re mostly paying for what you’re buying (storing your ad data on the
         blockchain) rather than complex middleware logic.
       </p>
@@ -158,7 +145,8 @@
       </p>
       <p>
         When you buy an ad unit, you're buying it directly from the smart
-        contract on the Ethereum blockchain. It feels like magic every time.
+        contract on the Solana blockchain. No middlemen !!!!
+        Isn't that an awesome feeling?
       </p>
     </article>
     <Footer/>
