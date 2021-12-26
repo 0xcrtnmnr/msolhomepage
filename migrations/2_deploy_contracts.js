@@ -1,4 +1,4 @@
-var KetherHomepage = artifacts.require("./KetherHomepage.sol");
+var MsolHomepage = artifacts.require("./MsolHomepage.sol");
 
 module.exports = function(deployer, network, accounts) {
   console.log("Deploying to: ", network, accounts);
@@ -6,9 +6,9 @@ module.exports = function(deployer, network, accounts) {
   const owner = accounts[0];
   if (network == "live") {
     const withdrawWallet = "0x00010dB6b405c4Cff3185926f5BDA140703A77c5";
-    deployer.deploy(KetherHomepage, owner, withdrawWallet);
+    deployer.deploy(MsolHomepage, owner, withdrawWallet);
     return;
   }
 
-  deployer.deploy(KetherHomepage, owner, owner);
+  deployer.deploy(MsolHomepage, owner, owner);
 };

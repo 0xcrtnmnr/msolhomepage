@@ -3,10 +3,10 @@ pragma solidity >=0.8.4;
 
 import "hardhat/console.sol";
 
-import "./IKetherHomepage.sol";
+import "./IMsolHomepage.sol";
 
-/// KetherHomepage is same as the old one, but ported to solidity v0.8
-contract KetherHomepageV2 is IKetherHomepage {
+/// MsolHomepage is same as the old one, but ported to solidity v0.8
+contract MsolHomepage is IMsolHomepage {
     /// Price is 1 kether divided by 1,000,000 pixels
     uint public constant weiPixelPrice = 1000000000000000;
 
@@ -45,14 +45,14 @@ contract KetherHomepageV2 is IKetherHomepage {
     function buy(uint _x, uint _y, uint _width, uint _height) payable public override returns (uint idx) {
         uint cost = _width * _height * pixelsPerCell * weiPixelPrice;
         require(cost > 0);
-        require(msg.value >= cost, "KetherHomepage: insufficient buy value");
+        require(msg.value >= cost, "MsolHomepage: insufficient buy value");
 
         // Loop over relevant grid entries
         for(uint i=0; i<_width; i++) {
             for(uint j=0; j<_height; j++) {
                 if (grid[_x+i][_y+j]) {
                     // Already taken, undo.
-                    revert("KetherHomepage: buy ad slot already taken");
+                    revert("MsolHomepage: buy ad slot already taken");
                 }
                 grid[_x+i][_y+j] = true;
             }
@@ -87,7 +87,7 @@ contract KetherHomepageV2 is IKetherHomepage {
     /// setAdOwner changes the owner of an ad unit
     function setAdOwner(uint _idx, address _newOwner) public override {
         Ad storage ad = ads[_idx];
-        require(msg.sender == ad.owner, "KetherHomepage: sender is not owner");
+        require(msg.sender == ad.owner, "MsolHomepage: sender is not owner");
         ad.owner = _newOwner;
 
         emit SetAdOwner(_idx, msg.sender, _newOwner);

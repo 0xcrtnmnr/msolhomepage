@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 
-interface IKetherHomepage {
+interface IMsolHomepage {
   function ads(uint _idx) external view returns (address,uint,uint,uint,uint,string memory,string memory,string memory,bool,bool);
   function getAdsLength() view external returns (uint);
 }
@@ -33,7 +33,7 @@ library Errors {
   string constant NotNominated = "token is not nominated";
 }
 
-contract KetherSortition is Ownable, VRFConsumerBase {
+contract MsolSortition is Ownable, VRFConsumerBase {
   event Nominated(
       uint256 indexed termNumber,
       address nominator,
@@ -80,8 +80,8 @@ contract KetherSortition is Ownable, VRFConsumerBase {
   /// @notice current term
   uint256 public termNumber = 0;
 
-  IERC721 ketherNFTContract;
-  IKetherHomepage ketherContract;
+  IERC721 msolNFTContract;
+  IMsolHomepage msolContract;
 
   /// @dev tokenIDs nominated in the current term
   uint256[] public nominatedTokens;
@@ -100,12 +100,12 @@ contract KetherSortition is Ownable, VRFConsumerBase {
   bytes32 private s_keyHash;
   uint256 private s_fee;
 
-  constructor(address _ketherNFTContract, address _ketherContract, address vrfCoordinator, address link, bytes32 keyHash, uint256 fee, uint256 _termDuration, uint256 _minElectionDuration ) VRFConsumerBase(vrfCoordinator, link) {
+  constructor(address _msolNFTContract, address _msolContract, address vrfCoordinator, address link, bytes32 keyHash, uint256 fee, uint256 _termDuration, uint256 _minElectionDuration ) VRFConsumerBase(vrfCoordinator, link) {
     s_keyHash = keyHash;
     s_fee = fee;
 
-    ketherNFTContract = IERC721(_ketherNFTContract);
-    ketherContract = IKetherHomepage(_ketherContract);
+    msolNFTContract = IERC721(_msolNFTContract);
+    msolContract = IMsolHomepage(_msolContract);
 
     termDuration = _termDuration;
     minElectionDuration = _minElectionDuration;
@@ -148,14 +148,14 @@ contract KetherSortition is Ownable, VRFConsumerBase {
   function _nominateAll(bool _nominateSelf, uint256 _nominateTokenId) internal returns (uint256) {
     require(state == StateMachine.NOMINATING, Errors.AlreadyStarted);
     address sender = _msgSender();
-    require(ketherNFTContract.balanceOf(sender) > 0, Errors.MustOwnToken);
+    require(msolNFTContract.balanceOf(sender) > 0, Errors.MustOwnToken);
     // This checks that the _nominateTokenId is minted, will revert otherwise
-    require(_nominateSelf || ketherNFTContract.ownerOf(_nominateTokenId) != address(0));
+    require(_nominateSelf || msolNFTContract.ownerOf(_nominateTokenId) != address(0));
 
 
     uint256 pixels = 0;
-    for (uint256 i = 0; i < ketherNFTContract.balanceOf(sender); i++) {
-      uint256 idx = ketherNFTContract.tokenOfOwnerByIndex(sender, i);
+    for (uint256 i = 0; i < msolNFTContract.balanceOf(sender); i++) {
+      uint256 idx = msolNFTContract.tokenOfOwnerByIndex(sender, i);
       if (_nominateSelf) {
         pixels += _nominate(idx, idx);
       } else {
@@ -178,11 +178,11 @@ contract KetherSortition is Ownable, VRFConsumerBase {
   }
 
   function getAdOwner(uint256 _idx) public view returns (address) {
-    return ketherNFTContract.ownerOf(_idx);
+    return msolNFTContract.ownerOf(_idx);
   }
 
   function getAdPixels(uint256 _idx) public view returns (uint256) {
-    (,,,uint width,uint height,,,,,) = ketherContract.ads(_idx);
+    (,,,uint width,uint height,,,,,) = msolContract.ads(_idx);
     return width * height * PIXELS_PER_CELL;
   }
 
@@ -227,9 +227,9 @@ contract KetherSortition is Ownable, VRFConsumerBase {
   function nominate(uint256 _ownedTokenId, uint256 _nominateTokenId) external returns (uint256) {
     require(state == StateMachine.NOMINATING, Errors.AlreadyStarted);
     address sender = _msgSender();
-    require(ketherNFTContract.ownerOf(_ownedTokenId) == sender, Errors.MustOwnToken);
+    require(msolNFTContract.ownerOf(_ownedTokenId) == sender, Errors.MustOwnToken);
     // This checks that the _nominateTokenId is minted, will revert otherwise
-    require(ketherNFTContract.ownerOf(_nominateTokenId) != address(0));
+    require(msolNFTContract.ownerOf(_nominateTokenId) != address(0));
     uint256 pixels = _nominate(_ownedTokenId, _nominateTokenId);
 
     // Note this is emitted in the public function while `_nominateAll` emits the event in the helper

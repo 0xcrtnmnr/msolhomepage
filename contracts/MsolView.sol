@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
-interface IKetherHomepage {
+interface IMsolHomepage {
   function ads(uint _idx) external view returns (address,uint,uint,uint,uint,string memory,string memory,string memory,bool,bool);
   function getAdsLength() view external returns (uint);
 }
@@ -10,7 +10,7 @@ interface IERC721 {
   function ownerOf(uint256) external view returns (address);
 }
 
-library KetherView {
+library MsolView {
   struct AdView {
     address owner;
     uint x;
@@ -30,7 +30,7 @@ library KetherView {
   function allAds(address _instanceAddress, address _nftAddress, uint _offset, uint _limit) external view returns (AdView[] memory) {
     // TODO: this errors out with `Error: Transaction reverted: library was called directly` if _offset is > length.
     // should we add a better error?
-    uint len = IKetherHomepage(_instanceAddress).getAdsLength() - _offset;
+    uint len = IMsolHomepage(_instanceAddress).getAdsLength() - _offset;
     if (_limit < len) {
       len = _limit;
     }
@@ -44,7 +44,7 @@ library KetherView {
   }
 
   function getAd(address _instanceAddress, address _nftAddress, uint _idx) public view returns (AdView memory) {
-      (address owner, uint x, uint y, uint width, uint height, string memory link, string memory image, string memory title, bool NSFW, bool forceNSFW) = IKetherHomepage(_instanceAddress).ads(_idx);
+      (address owner, uint x, uint y, uint width, uint height, string memory link, string memory image, string memory title, bool NSFW, bool forceNSFW) = IMsolHomepage(_instanceAddress).ads(_idx);
       bool wrapped = false;
 
       // Is it an NFT already?

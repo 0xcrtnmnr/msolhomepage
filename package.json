@@ -1,6 +1,6 @@
 {
-  "name": "ketherhomepage",
-  "description": "Thousand Ether Homepage",
+  "name": "msolhomepage",
+  "description": "Million Solana Homepage",
   "version": "2.0.0",
   "private": true,
   "scripts": {

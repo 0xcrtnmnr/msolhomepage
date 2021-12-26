@@ -1,28 +1,28 @@
 const { expect } = require('chai');
 
-const weiPixelPrice = ethers.utils.parseUnits("0.001", "ether");
+const weiPixelPrice = ethers.utils.parseUnits("1", "ether");
 const pixelsPerCell = ethers.BigNumber.from(100);
 const oneHundredCellPrice = pixelsPerCell.mul(weiPixelPrice).mul(100);
 
-describe('KetherNFT', function() {
-  let KetherHomepage, KetherNFT, KetherNFTRender, FlashEscrow;
+describe('MsolNFT', function() {
+  let MsolHomepage, MsolNFT, MsolNFTRender, FlashEscrow;
   let accounts, KH, KNFT, KNFTrender;
 
   const baseURI = "ipfs://QmYhpcC8esDv2uL9cJUdY5FSUdDHAZQDsk7pwBb7BJgeXo/";
 
   beforeEach(async() => {
     // NOTE: We're using V2 here because it's ported to newer solidity so we can debug more easily. It should also work with V1.
-    KetherHomepage = await ethers.getContractFactory("KetherHomepageV2");
-    KetherNFT = await ethers.getContractFactory("KetherNFT");
-    KetherNFTRender = await ethers.getContractFactory("KetherNFTRenderV2");
+    MsolHomepage = await ethers.getContractFactory("MsolHomepage");
+    MsolNFT = await ethers.getContractFactory("MsolNFT");
+    MsolNFTRender = await ethers.getContractFactory("MsolNFTRenderV2");
     FlashEscrow = await ethers.getContractFactory("FlashEscrow");
 
     const [owner, withdrawWallet, metadataSigner, account1, account2, account3] = await ethers.getSigners();
     accounts = {owner, withdrawWallet, metadataSigner, account1, account2, account3};
 
-    KH = await KetherHomepage.deploy(await owner.getAddress(), await withdrawWallet.getAddress());
-    KNFTrender = await KetherNFTRender.deploy(baseURI);
-    KNFT = await KetherNFT.deploy(KH.address, KNFTrender.address);
+    KH = await MsolHomepage.deploy(await owner.getAddress(), await withdrawWallet.getAddress());
+    KNFTrender = await MsolNFTRender.deploy(baseURI);
+    KNFT = await MsolNFT.deploy(KH.address, KNFTrender.address);
   });
 
   const buyAd = async function(account, x=0, y=0, width=10, height=10, link="link", image="image", title="title", NSFW=false, value=oneHundredCellPrice) {
@@ -34,7 +34,7 @@ describe('KetherNFT', function() {
     return idx;
   }
 
-  it("should wrap ad with KetherNFT", async function() {
+  it("should wrap ad with MsolNFT", async function() {
     const {account1} = accounts;
 
     // Buy an ad
@@ -95,7 +95,7 @@ describe('KetherNFT', function() {
     // Non-owner cannot wrap, either
     await expect(
       KNFT.connect(account2).wrap(idx, await account2.getAddress())
-    ).to.be.revertedWith("KetherNFT: owner needs to be the correct precommitted address");
+    ).to.be.revertedWith("MsolNFT: owner needs to be the correct precommitted address");
 
     // Same precomputed transaction is fine for the owner to run (precommit wrap to account2)
     await KH.connect(account1).setAdOwner(idx, precomputeAddress);
@@ -103,12 +103,12 @@ describe('KetherNFT', function() {
     // Rando can't wrap to themselves
     await expect(
       KNFT.connect(account3).wrap(idx, await account3.getAddress())
-    ).to.be.revertedWith("KetherNFT: owner needs to be the correct precommitted address");
+    ).to.be.revertedWith("MsolNFT: owner needs to be the correct precommitted address");
 
     // Rando can't wrap to owner (since the precommit is for account2)
     await expect(
       KNFT.connect(account3).wrap(idx, await account1.getAddress())
-    ).to.be.revertedWith("KetherNFT: owner needs to be the correct precommitted address");
+    ).to.be.revertedWith("MsolNFT: owner needs to be the correct precommitted address");
 
     // Rando *can* wrap to the precommitted account2
     // FIXME: Is this desirable? It allows non-owner to pay for the wrap, which is nice.
@@ -256,7 +256,7 @@ describe('KetherNFT', function() {
 
     await expect(
       KNFT.connect(account2).unwrap(idx, await account2.getAddress())
-    ).to.be.revertedWith("KetherNFT: unwrap for sender that is not owner")
+    ).to.be.revertedWith("MsolNFT: unwrap for sender that is not owner")
 
     await KNFT.connect(account1).unwrap(idx, await account2.getAddress());
 
@@ -269,7 +269,7 @@ describe('KetherNFT', function() {
     expect(await KNFT.connect(account2).balanceOf(await account2.getAddress())).to.equal(0);
     await expect(
       KNFT.connect(account2).tokenURI(idx)
-    ).to.be.revertedWith("KetherNFT: tokenId does not exist");
+    ).to.be.revertedWith("MsolNFT: tokenId does not exist");
 
     {
       // Wrap again, from account2 to account2
@@ -294,7 +294,7 @@ describe('KetherNFT', function() {
       expect(salt).to.equal(expected);
     }
 
-    const wrappedPayload = KH.interface.encodeFunctionData("setAdOwner", [idx, KNFT.address]); // Confirmed this matches KetherNFT._wrapPayload
+    const wrappedPayload = KH.interface.encodeFunctionData("setAdOwner", [idx, KNFT.address]); // Confirmed this matches MsolNFT._wrapPayload
 
     {
       // Validate wrapped payload encoding
@@ -364,7 +364,7 @@ describe('KetherNFT', function() {
     const idx2 = await buyAd(account1, x=20, y=20);
     expect(idx2).to.equal(1);
 
-    // Oopsie, transferred the ad to the KetherNFT contract rather than the commitment address (don't do this!)
+    // Oopsie, transferred the ad to the MsolNFT contract rather than the commitment address (don't do this!)
     await KH.connect(account1).setAdOwner(idx, KNFT.address);
     {
       const [addr,..._] = await KH.ads(idx);
@@ -374,7 +374,7 @@ describe('KetherNFT', function() {
     // Admin can't transfer non-stuck ads
     expect(
       KNFT.connect(owner).adminRecoverTrapped(idx2, await owner.getAddress())
-    ).to.be.revertedWith("KetherNFT: ad not held by contract");
+    ).to.be.revertedWith("MsolNFT: ad not held by contract");
 
     // Rando can't call admin recover
     expect(
@@ -390,7 +390,7 @@ describe('KetherNFT', function() {
     }
   });
 
-  it("should be recoverable if minted to KetherNFT itself", async function() {
+  it("should be recoverable if minted to MsolNFT itself", async function() {
     const {owner, account1} = accounts;
 
     // Buy an ad
@@ -400,13 +400,13 @@ describe('KetherNFT', function() {
     // Precommit to the *wrong address*: the KNFT address (don't do this!)
     expect(
       KNFT.connect(account1).precompute(idx, KNFT.address)
-    ).to.be.revertedWith("KetherNFT: invalid _owner");
+    ).to.be.revertedWith("MsolNFT: invalid _owner");
   });
 
   it("should let us upgrade the renderer", async function() {
     const {owner, account1} = accounts;
 
-    const KNFTrender2 = await KetherNFTRender.deploy("ipfs://NEWCID/");
+    const KNFTrender2 = await MsolNFTRender.deploy("ipfs://NEWCID/");
 
     expect(
       KNFT.connect(account1).adminSetRenderer(KNFTrender2.address)
@@ -418,7 +418,7 @@ describe('KetherNFT', function() {
 
     expect(
       KNFT.connect(owner).adminSetRenderer(KNFTrender.address)
-    ).to.be.revertedWith("KetherNFT: upgrading renderer is disabled");
+    ).to.be.revertedWith("MsolNFT: upgrading renderer is disabled");
   });
 });
 

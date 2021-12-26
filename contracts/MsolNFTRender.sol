@@ -3,18 +3,18 @@ pragma solidity >=0.8.4;
 
 import '@openzeppelin/contracts/utils/Strings.sol';
 
-import "./IKetherHomepage.sol";
+import "./IMsolHomepage.sol";
 
 import "base64-sol/base64.sol";
 
 interface ITokenRenderer {
-    function tokenURI(IKetherHomepage instance, uint256 tokenId) external view returns (string memory);
+    function tokenURI(IMsolHomepage instance, uint256 tokenId) external view returns (string memory);
 }
 
-contract KetherNFTRender is ITokenRenderer {
+contract MsolNFTRender is ITokenRenderer {
   using Strings for uint;
 
-  function renderNFTImage(IKetherHomepage instance, uint256 tokenId, uint renderNum) public view returns (string memory) {
+  function renderNFTImage(IMsolHomepage instance, uint256 tokenId, uint renderNum) public view returns (string memory) {
     uint maxId = instance.getAdsLength() - 1;
     if (renderNum > maxId) renderNum = maxId+1;
 
@@ -97,7 +97,7 @@ contract KetherNFTRender is ITokenRenderer {
       return val ? "true" : "false";
   }
 
-  function tokenURI(IKetherHomepage instance, uint256 tokenId) public view override(ITokenRenderer) returns (string memory) {
+  function tokenURI(IMsolHomepage instance, uint256 tokenId) public view override(ITokenRenderer) returns (string memory) {
     (,uint x,uint y,uint width,uint height,,,,bool NSFW,bool forceNSFW) = instance.ads(tokenId);
 
     // Units are 1/10

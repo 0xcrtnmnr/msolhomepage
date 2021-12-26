@@ -3,15 +3,15 @@ pragma solidity >=0.8.4;
 
 import '@openzeppelin/contracts/utils/Strings.sol';
 
-import "./IKetherHomepage.sol";
+import "./IMsolHomepage.sol";
 
 import "base64-sol/base64.sol";
 
 interface ITokenRenderer {
-    function tokenURI(IKetherHomepage instance, uint256 tokenId) external view returns (string memory);
+    function tokenURI(IMsolHomepage instance, uint256 tokenId) external view returns (string memory);
 }
 
-contract KetherNFTRenderV2 is ITokenRenderer {
+contract MsolNFTRenderV2 is ITokenRenderer {
   using Strings for uint;
 
   string baseURI;
@@ -63,7 +63,7 @@ contract KetherNFTRenderV2 is ITokenRenderer {
   }
 
 
-  function tokenURI(IKetherHomepage instance, uint256 tokenId) public view override(ITokenRenderer) returns (string memory) {
+  function tokenURI(IMsolHomepage instance, uint256 tokenId) public view override(ITokenRenderer) returns (string memory) {
     (,uint x,uint y,uint width,uint height,,,,bool NSFW,bool forceNSFW) = instance.ads(tokenId);
 
     // Units are 1/10

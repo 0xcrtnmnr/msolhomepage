@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
-interface IKetherHomepage {
+interface IMsolHomepage {
     struct Ad {
         address owner;
         uint x;

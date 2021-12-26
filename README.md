@@ -1,1 +1,1 @@
-# ThousandEtherHomepage
+# MillionSolanaHomepage

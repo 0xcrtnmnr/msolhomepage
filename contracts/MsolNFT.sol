@@ -4,8 +4,8 @@ pragma solidity >=0.8.4;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "./IKetherHomepage.sol";
-import "./KetherNFTRender.sol";
+import "./IMsolHomepage.sol";
+import "./MsolNFTRender.sol";
 
 
 contract FlashEscrow {
@@ -17,9 +17,9 @@ contract FlashEscrow {
   }
 }
 
-contract KetherNFT is ERC721Enumerable, Ownable {
-  /// instance is the KetherHomepage contract that this wrapper interfaces with.
-  IKetherHomepage public instance;
+contract MsolNFT is ERC721Enumerable, Ownable {
+  /// instance is the MsolHomepage contract that this wrapper interfaces with.
+  IMsolHomepage public instance;
 
   /// disableRenderUpgrade is whether we can still upgrade the tokenURI renderer.
   /// Once it is set it cannot be unset.
@@ -27,8 +27,8 @@ contract KetherNFT is ERC721Enumerable, Ownable {
 
   ITokenRenderer public renderer;
 
-  constructor(address _ketherContract, address _renderer) ERC721("Thousand Ether Homepage Ad", "1KAD") {
-    instance = IKetherHomepage(_ketherContract);
+  constructor(address _msolContract, address _renderer) ERC721("Thousand Ether Homepage Ad", "1KAD") {
+    instance = IMsolHomepage(_msolContract);
     renderer = ITokenRenderer(_renderer);
   }
 
@@ -46,7 +46,7 @@ contract KetherNFT is ERC721Enumerable, Ownable {
   /// of the ad, or a different address. After the ad is transfered to the precomputed address, `wrap` has
   /// to be called with the same `_owner` to complete minting the NFT.
   function precompute(uint _idx, address _owner) public view returns (bytes32 salt, address predictedAddress) {
-    require(_owner != address(this) && _owner != address(0), "KetherNFT: invalid _owner");
+    require(_owner != address(this) && _owner != address(0), "MsolNFT: invalid _owner");
 
     salt = sha256(abi.encodePacked(_owner));
 
@@ -75,20 +75,20 @@ contract KetherNFT is ERC721Enumerable, Ownable {
   function wrap(uint _idx, address _owner) external {
     (bytes32 salt, address precomputedFlashEscrow) = precompute(_idx, _owner);
 
-    require(_getAdOwner(_idx) == precomputedFlashEscrow, "KetherNFT: owner needs to be the correct precommitted address");
+    require(_getAdOwner(_idx) == precomputedFlashEscrow, "MsolNFT: owner needs to be the correct precommitted address");
 
     // FlashEscrow completes the transfer escrow atomically and self-destructs.
     new FlashEscrow{salt: salt}(address(instance), _encodeFlashEscrowPayload(_idx));
-    require(_getAdOwner(_idx) == address(this), "KetherNFT: owner needs to be KetherNFT after wrap");
+    require(_getAdOwner(_idx) == address(this), "MsolNFT: owner needs to be MsolNFT after wrap");
 
     _mint(_owner, _idx);
   }
 
   function unwrap(uint _idx, address _newOwner) external {
-    require(_isApprovedOrOwner(_msgSender(), _idx), "KetherNFT: unwrap for sender that is not owner");
+    require(_isApprovedOrOwner(_msgSender(), _idx), "MsolNFT: unwrap for sender that is not owner");
 
     instance.setAdOwner(_idx, _newOwner);
-    require(_getAdOwner(_idx) == _newOwner, "KetherNFT: unwrap ownership transfer failed");
+    require(_getAdOwner(_idx) == _newOwner, "MsolNFT: unwrap ownership transfer failed");
 
     _burn(_idx);
   }
@@ -96,11 +96,11 @@ contract KetherNFT is ERC721Enumerable, Ownable {
   function baseURI() public pure returns (string memory) {}
 
   function tokenURI(uint256 tokenId) public view override(ERC721) returns (string memory) {
-    require(_exists(tokenId), "KetherNFT: tokenId does not exist");
+    require(_exists(tokenId), "MsolNFT: tokenId does not exist");
     return renderer.tokenURI(instance, tokenId);
   }
 
-  /// publish is a proxy for KetherHomapage's publish function.
+  /// publish is a proxy for MsolHomapage's publish function.
   ///
   /// Publish allows for setting the link, image, and NSFW status for the ad
   /// unit that is identified by the idx which was returned during the buy step.
@@ -113,12 +113,12 @@ contract KetherNFT is ERC721Enumerable, Ownable {
   /// Images should be valid PNG.
   /// Content-addressable storage links like IPFS are encouraged.
   function publish(uint _idx, string calldata _link, string calldata _image, string calldata _title, bool _NSFW) external {
-    require(_isApprovedOrOwner(_msgSender(), _idx), "KetherNFT: publish for sender that is not approved");
+    require(_isApprovedOrOwner(_msgSender(), _idx), "MsolNFT: publish for sender that is not approved");
 
     instance.publish(_idx, _link, _image, _title, _NSFW);
   }
 
-  /// buy is a proxy for KetherHomepage's buy function. Calling it allows
+  /// buy is a proxy for MsolHomepage's buy function. Calling it allows
   /// an ad to be purchased directly as an NFT without needing to wrap it later.
   ///
   /// Ads must be purchased in 10x10 pixel blocks.
@@ -141,13 +141,13 @@ contract KetherNFT is ERC721Enumerable, Ownable {
   /// Note that this function does *not* give admin any control over properly
   /// minted ads/NFTs.
   function adminRecoverTrapped(uint _idx, address _to) external onlyOwner {
-    require(!_exists(_idx), "KetherNFT: recovery can only be done on unminted ads");
-    require(_getAdOwner(_idx) == address(this), "KetherNFT: ad not held by contract");
+    require(!_exists(_idx), "MsolNFT: recovery can only be done on unminted ads");
+    require(_getAdOwner(_idx) == address(this), "MsolNFT: ad not held by contract");
     instance.setAdOwner(_idx, _to);
   }
 
   function adminSetRenderer(address _renderer) external onlyOwner {
-    require(disableRenderUpgrade == false, "KetherNFT: upgrading renderer is disabled");
+    require(disableRenderUpgrade == false, "MsolNFT: upgrading renderer is disabled");
     renderer = ITokenRenderer(_renderer);
   }
 
