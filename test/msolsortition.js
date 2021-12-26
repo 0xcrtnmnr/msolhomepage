@@ -4,7 +4,7 @@ const weiPixelPrice = ethers.utils.parseUnits("0.001", "ether");
 const pixelsPerCell = ethers.BigNumber.from(100);
 const oneHundredCellPrice = pixelsPerCell.mul(weiPixelPrice).mul(100);
 
-// FIXME: Is there a good way to import this from KetherSortition.sol?
+// FIXME: Is there a good way to import this from MsolSortition.sol?
 const Errors = {
   MustOwnToken: "must own token",
   OnlyMagistrate: "only active magistrate can do this",
@@ -17,16 +17,16 @@ const Errors = {
   NotNominated: "token is not nominated"
 };
 
-describe('KetherSortition', function() {
-  let KetherHomepage, KetherNFT, KetherSortition;
+describe('MsolSortition', function() {
+  let MsolHomepage, MsolNFT, MsolSortition;
   let accounts, KH, KNFT, KS;
 
   beforeEach(async () => {
     // NOTE: We're using V2 here because it's ported to newer solidity so we can debug more easily. It should also work with V1.
-    KetherHomepage = await ethers.getContractFactory("KetherHomepageV2");
-    KetherNFT = await ethers.getContractFactory("KetherNFT");
-    KetherNFTRender = await ethers.getContractFactory("KetherNFTRender");
-    KetherSortition = await ethers.getContractFactory("KetherSortition");
+    MsolHomepage = await ethers.getContractFactory("MsolHomepage");
+    MsolNFT = await ethers.getContractFactory("MsolNFT");
+    MsolNFTRender = await ethers.getContractFactory("MsolNFTRender");
+    MsolSortition = await ethers.getContractFactory("MsolSortition");
     MockVRFCoordinator = await ethers.getContractFactory("MockVRFCoordinator");
     MockLink = await ethers.getContractFactory("MockLink");
 
@@ -38,11 +38,11 @@ describe('KetherSortition', function() {
 
     VRF = await MockVRFCoordinator.deploy();
     LINK = await MockLink.deploy();
-    KH = await KetherHomepage.deploy(await owner.getAddress(), await withdrawWallet.getAddress());
-    KNFTrender = await KetherNFTRender.deploy();
-    KNFT = await KetherNFT.deploy(KH.address, KNFTrender.address);
+    KH = await MsolHomepage.deploy(await owner.getAddress(), await withdrawWallet.getAddress());
+    KNFTrender = await MsolNFTRender.deploy();
+    KNFT = await MsolNFT.deploy(KH.address, KNFTrender.address);
     let hour = 60*60;
-    KS = await KetherSortition.deploy(KNFT.address, KH.address, VRF.address, LINK.address, keyHash, fee, 2 * hour, 1 * hour);
+    KS = await MsolSortition.deploy(KNFT.address, KH.address, VRF.address, LINK.address, keyHash, fee, 2 * hour, 1 * hour);
   });
 
   const buyNFT = async function(account, x=0, y=0, width=10, height=10, link="link", image="image", title="title", NSFW=false, value=undefined) {

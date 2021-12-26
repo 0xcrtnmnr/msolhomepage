@@ -4,25 +4,25 @@ const weiPixelPrice = ethers.utils.parseUnits("0.001", "ether");
 const pixelsPerCell = ethers.BigNumber.from(100);
 const oneHundredCellPrice = pixelsPerCell.mul(weiPixelPrice).mul(100);
 
-describe('KetherView', function() {
-  let KetherHomepage, KetherNFT, KetherView;
+describe('MsolView', function() {
+  let MsolHomepage, MsolNFT, MsolView;
   let accounts, KH, KNFT;
 
   beforeEach(async () => {
     // NOTE: We're using V2 here because it's ported to newer solidity so we can debug more easily. It should also work with V1.
-    KetherHomepage = await ethers.getContractFactory("KetherHomepageV2");
-    KetherNFT = await ethers.getContractFactory("KetherNFT");
-    KetherNFTRender = await ethers.getContractFactory("KetherNFTRender");
-    KetherView = await ethers.getContractFactory("KetherView");
+    MsolHomepage = await ethers.getContractFactory("MsolHomepage");
+    MsolNFT = await ethers.getContractFactory("MsolNFT");
+    MsolNFTRender = await ethers.getContractFactory("MsolNFTRender");
+    MsolView = await ethers.getContractFactory("MsolView");
 
 
     const [owner, withdrawWallet, metadataSigner, account1, account2, account3] = await ethers.getSigners();
     accounts = {owner, withdrawWallet, metadataSigner, account1, account2, account3};
 
-    KH = await KetherHomepage.deploy(await owner.getAddress(), await withdrawWallet.getAddress());
-    KNFTrender = await KetherNFTRender.deploy();
-    KNFT = await KetherNFT.deploy(KH.address, KNFTrender.address);
-    KV = await KetherView.deploy();
+    KH = await MsolHomepage.deploy(await owner.getAddress(), await withdrawWallet.getAddress());
+    KNFTrender = await MsolNFTRender.deploy();
+    KNFT = await MsolNFT.deploy(KH.address, KNFTrender.address);
+    KV = await MsolView.deploy();
 
   });
 
