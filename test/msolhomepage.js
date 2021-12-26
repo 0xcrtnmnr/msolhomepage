@@ -47,7 +47,7 @@ describe('MsolHomepage', function() {
   it("shouldn't let users buy if they don't send enough eth", async function() {
     await expect(
       MS.connect(account1).buy(0, 0, 10, 10, { value: 1 })
-    ).to.be.revertedWith("Transaction reverted without a reason");
+    ).to.be.revertedWith("MsolHomepage: insufficient buy value");
   });
 
   it("should let users buy if they send enough eth", async function() {
