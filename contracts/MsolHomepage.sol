@@ -7,8 +7,7 @@ import "./IMsolHomepage.sol";
 
 /// MsolHomepage is same as the old one, but ported to solidity v0.8
 contract MsolHomepage is IMsolHomepage {
-    /// Price is 1 kether divided by 1,000,000 pixels
-    uint public constant weiPixelPrice = 1000000000000000;
+    uint public constant weiPixelPrice = 1000000000000000000;
 
     /// Each grid cell represents 100 pixels (10x10).
     uint public constant pixelsPerCell = 100;

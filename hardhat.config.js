@@ -16,6 +16,15 @@ if (ACCOUNT_PRIVATE_KEY !== undefined) {
  */
 module.exports = {
   networks: {
+    hardhat: {
+      accounts: {
+        mnemonic: "test test test test test test test test test test test junk",
+        accountsBalance: "1000000000000000000000000000",
+        count: 20,
+        initialIndex: 0,
+        path: "m/44'/60'/0'/0"
+      }
+    },
     rinkeby: {
       url: 'https://rinkeby.infura.io/v3/' + INFURA_API_KEY,
       accounts: ACCOUNTS,

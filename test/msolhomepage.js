@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 
 // TODO: should we query the contract to make sure the above values are right?
-const weiPixelPrice = ethers.utils.parseUnits("0.001", "ether");
+const weiPixelPrice = ethers.utils.parseUnits("1", "ether");
 const pixelsPerCell = ethers.BigNumber.from(100);
 const oneHundredCellPrice = pixelsPerCell.mul(weiPixelPrice).mul(100);
 
@@ -21,7 +21,7 @@ describe('MsolHomepage', function() {
 
     await owner.sendTransaction({
       to: account1.getAddress(),
-      value: ethers.utils.parseEther("100.0")
+      value: ethers.utils.parseEther("1000000.0")
     })
   })
 
@@ -41,7 +41,7 @@ describe('MsolHomepage', function() {
   it("should be a Msol", function() {
     const amount = weiPixelPrice.mul(pixelsPerCell).mul('10000'); // 100 * 100
     const ether = ethers.utils.formatUnits(amount, 'ether');
-    expect(ether).to.equal('1000.0'); // 1 Msol
+    expect(ether).to.equal('1000000.0'); // 1 Msol
   });
 
   it("shouldn't let users buy if they don't send enough eth", async function() {
