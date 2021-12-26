@@ -4,21 +4,21 @@ const ethers = hre.ethers;
 const deployed = {
   'rinkeby': {
     ownerAddress: "0xbCb061d2feE38DCB6DE7e5D269852B4BDb986Ed6",
-    ketherHomepageAddress: "0xb88404dd8fe4969ef67841250baef7f04f6b1a5e",
-    ketherNFTOwnerAddress: "0xbCb061d2feE38DCB6DE7e5D269852B4BDb986Ed6",
-    ketherNFTRendererAddress: "0xf611Ee721450Aa52bB16283D32784469eBF106E7", // V2
-    ketherNFTAddress: "0xB7fCb57a5ce2F50C3203ccda27c05AEAdAF2C221",
-    ketherViewAddress: "0xd58D4ff574140472F9Ae2a90B6028Df822c10109",
-    ketherSortitionAddress: "0xA194a30C201523631E29EFf80718D72994eFa1d6",
+    msolHomepageAddress: "0xb88404dd8fe4969ef67841250baef7f04f6b1a5e",
+    msolNFTOwnerAddress: "0xbCb061d2feE38DCB6DE7e5D269852B4BDb986Ed6",
+    msolNFTRendererAddress: "0xf611Ee721450Aa52bB16283D32784469eBF106E7", // V2
+    msolNFTAddress: "0xB7fCb57a5ce2F50C3203ccda27c05AEAdAF2C221",
+    msolViewAddress: "0xd58D4ff574140472F9Ae2a90B6028Df822c10109",
+    msolSortitionAddress: "0xA194a30C201523631E29EFf80718D72994eFa1d6",
   },
   'mainnet': {
     ownerAddress: "0xd534d9f6e61780b824afaa68032a7ec11720ca12",
-    ketherNFTOwnerAddress: "0x714439382A47A23f7cdF56C9764ec22943f79361",
-    ketherHomepageAddress: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
-    ketherNFTRendererAdKetherRendress: "0xdAdf78F35dED924823dd80A2312F1b97549C4f7b", // V2
-    ketherNFTAddress: "0x7bb952AB78b28a62b1525acA54A71E7Aa6177645",
-    ketherViewAddress: "0xaC292791A8b398698363F820dd6FbEE6EDF71442",
-    ketherSortitionAddress: "0xa9a57f7d2A54C1E172a7dC546fEE6e03afdD28E2",
+    msolNFTOwnerAddress: "0x714439382A47A23f7cdF56C9764ec22943f79361",
+    msolHomepageAddress: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
+    msolNFTRendererAdMsolRendress: "0xdAdf78F35dED924823dd80A2312F1b97549C4f7b", // V2
+    msolNFTAddress: "0x7bb952AB78b28a62b1525acA54A71E7Aa6177645",
+    msolViewAddress: "0xaC292791A8b398698363F820dd6FbEE6EDF71442",
+    msolSortitionAddress: "0xa9a57f7d2A54C1E172a7dC546fEE6e03afdD28E2",
   },
 };
 deployed['homestead'] = deployed['mainnet']; // Alias for ethers
@@ -92,83 +92,83 @@ async function main() {
   //const maxPriorityFeePerGas = ethers.utils.parseUnits("1", "gwei");
 
   // Confirm the contract is actually there
-  const KH = await ethers.getContractAt("KetherHomepage", cfg.ketherHomepageAddress);
+  const KH = await ethers.getContractAt("MsolHomepage", cfg.msolHomepageAddress);
 
   const [account] = await ethers.getSigners();
   if (account === undefined) {
     throw "Signer account not provided, specify ACCOUNT_PRIVATE_KEY";
-  } else if (account.address !== cfg.ketherNFTOwnerAddress) {
-   // throw "Did not acquire signer for owner address: " + cfg.ketherNFTOwnerAddress + "; got: " + account.address;
+  } else if (account.address !== cfg.msolNFTOwnerAddress) {
+   // throw "Did not acquire signer for owner address: " + cfg.msolNFTOwnerAddress + "; got: " + account.address;
   }
   console.log("Starting deploys from address:", account.address);
 
-  const KetherNFT = await ethers.getContractFactory("KetherNFT");
-  const KetherNFTRenderV2 = await ethers.getContractFactory("KetherNFTRenderV2");
-  const KetherView = await ethers.getContractFactory("KetherView");
-  const KetherSortition = await ethers.getContractFactory("KetherSortition");
+  const MsolNFT = await ethers.getContractFactory("MsolNFT");
+  const MsolNFTRenderV2 = await ethers.getContractFactory("MsolNFTRenderV2");
+  const MsolView = await ethers.getContractFactory("MsolView");
+  const MsolSortition = await ethers.getContractFactory("MsolSortition");
 
   const rendererCfg = rendererConfig[network.name];
-  let ketherNFTRendererAddress = cfg["ketherNFTRendererAddress"];
-  if (ketherNFTRendererAddress === undefined) {
-    const KNFTrender = await KetherNFTRenderV2.deploy(rendererCfg.baseURI, { maxFeePerGas, maxPriorityFeePerGas });
-    console.log("Deploying KetherNFTRender to:", KNFTrender.address);
-    ketherNFTRendererAddress = KNFTrender.address;
+  let msolNFTRendererAddress = cfg["msolNFTRendererAddress"];
+  if (msolNFTRendererAddress === undefined) {
+    const KNFTrender = await MsolNFTRenderV2.deploy(rendererCfg.baseURI, { maxFeePerGas, maxPriorityFeePerGas });
+    console.log("Deploying MsolNFTRender to:", KNFTrender.address);
+    msolNFTRendererAddress = KNFTrender.address;
 
     const tx = await KNFTrender.deployTransaction.wait();
     console.log(" -> Mined with", tx.gasUsed.toString(), "gas");
   } else {
-    console.log("KetherNFTRender already deployed");
+    console.log("MsolNFTRender already deployed");
   }
 
-  console.log(`Verify on Etherscan: npx hardhat verify --network ${network.name} ${ketherNFTRendererAddress} "${rendererCfg.baseURI}"`);
+  console.log(`Verify on Etherscan: npx hardhat verify --network ${network.name} ${msolNFTRendererAddress} "${rendererCfg.baseURI}"`);
 
-  let ketherNFTAddress = cfg["ketherNFTAddress"];
-  if (ketherNFTAddress === undefined) {
-    const KNFT = await KetherNFT.deploy(KH.address, ketherNFTRendererAddress, { maxFeePerGas, maxPriorityFeePerGas });
-    console.log("Deploying KetherNFT to:", KNFT.address);
-    ketherNFTAddress = KNFT.address;
+  let msolNFTAddress = cfg["msolNFTAddress"];
+  if (msolNFTAddress === undefined) {
+    const KNFT = await MsolNFT.deploy(KH.address, msolNFTRendererAddress, { maxFeePerGas, maxPriorityFeePerGas });
+    console.log("Deploying MsolNFT to:", KNFT.address);
+    msolNFTAddress = KNFT.address;
 
     const tx = await KNFT.deployTransaction.wait();
     console.log(" -> Mined with", tx.gasUsed.toString(), "gas");
   } else {
-    console.log("KetherNFT already deployed");
+    console.log("MsolNFT already deployed");
   }
 
-  console.log(`Verify on Etherscan: npx hardhat verify --network ${network.name} ${ketherNFTAddress} "${KH.address}" "${ketherNFTRendererAddress}"`);
+  console.log(`Verify on Etherscan: npx hardhat verify --network ${network.name} ${msolNFTAddress} "${KH.address}" "${msolNFTRendererAddress}"`);
 
-  let ketherViewAddress = cfg["ketherViewAddress"];
-  if (ketherViewAddress === undefined) {
-    const KView = await KetherView.deploy({ maxFeePerGas, maxPriorityFeePerGas });
-    console.log("Deploying KetherView to:", KView.address);
-    ketherViewAddress = KView.address;
+  let msolViewAddress = cfg["msolViewAddress"];
+  if (msolViewAddress === undefined) {
+    const KView = await MsolView.deploy({ maxFeePerGas, maxPriorityFeePerGas });
+    console.log("Deploying MsolView to:", KView.address);
+    msolViewAddress = KView.address;
 
     const tx = await KView.deployTransaction.wait();
     console.log(" -> Mined with", tx.gasUsed.toString(), "gas");
   } else {
-    console.log("KetherView already deployed");
+    console.log("MsolView already deployed");
   }
 
-  console.log(`Verify on Etherscan: npx hardhat verify --network ${network.name} ${ketherViewAddress}`);
+  console.log(`Verify on Etherscan: npx hardhat verify --network ${network.name} ${msolViewAddress}`);
 
 
   const sortition = sortitionConfig[network.name];
-  let ketherSortitionAddress = cfg["ketherSortitionAddress"];
-  if (ketherSortitionAddress === undefined) {
-    const KS = await KetherSortition.deploy(
-      ketherNFTAddress, KH.address,
+  let msolSortitionAddress = cfg["msolSortitionAddress"];
+  if (msolSortitionAddress === undefined) {
+    const KS = await MsolSortition.deploy(
+      msolNFTAddress, KH.address,
       sortition.vrfCoordinator, sortition.link, sortition.keyHash, sortition.fee,
       sortition.termDuration, sortition.minElectionDuration,
       { maxFeePerGas, maxPriorityFeePerGas });
-    console.log("Deploying KetherSortition to:", KS.address);
-    ketherSortitionAddress = KS.address;
+    console.log("Deploying MsolSortition to:", KS.address);
+    msolSortitionAddress = KS.address;
 
     const tx = await KS.deployTransaction.wait();
     console.log(" -> Mined with", tx.gasUsed.toString(), "gas");
   } else {
-    console.log("KetherSortition already deployed");
+    console.log("MsolSortition already deployed");
   }
 
-  console.log(`Verify on Etherscan: npx hardhat verify --network ${network.name} ${ketherSortitionAddress} ${ketherNFTAddress} ${KH.address} ${sortition.vrfCoordinator} ${sortition.link} ${sortition.keyHash} ${sortition.fee} ${sortition.termDuration} ${sortition.minElectionDuration}`);
+  console.log(`Verify on Etherscan: npx hardhat verify --network ${network.name} ${msolSortitionAddress} ${msolNFTAddress} ${KH.address} ${sortition.vrfCoordinator} ${sortition.link} ${sortition.keyHash} ${sortition.fee} ${sortition.termDuration} ${sortition.minElectionDuration}`);
 }
 
 main()

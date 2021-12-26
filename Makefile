@@ -7,10 +7,10 @@ test: deps contracts
 run: deps contracts
 	npm run dev
 
-deploy-dapp: build ../thousandetherhomepage.github.io
-	rm -rf ../thousandetherhomepage.github.io/_nuxt
-	rsync -rv dist/* ../thousandetherhomepage.github.io/
-	cd ../thousandetherhomepage.github.io; git add -v -A; git commit -v -a
+deploy-dapp: build ../millionsolanahomepage.github.io
+	rm -rf ../millionsolanahomepage.github.io/_nuxt
+	rsync -rv dist/* ../millionsolanahomepage.github.io/
+	cd ../millionsolanahomepage.github.io; git add -v -A; git commit -v -a
 	echo "Push it."
 
 deploy-contract:
